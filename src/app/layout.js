@@ -2,6 +2,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "../../redux/Provider";
 import { UIProvider } from "../../contexts/useUIContext";
+import { FullCodeContextProvider } from "../../contexts/useFullCodeDiagramContext";
+import FullCodeDiagramView from "@/components/FullCodeDiagramView";
 const segoe = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +27,10 @@ export default function RootLayout({ children }) {
       >
         <UIProvider>
           <ReduxProvider>
-            {children}
+            <FullCodeContextProvider>
+              {children}
+              <FullCodeDiagramView />
+            </FullCodeContextProvider>
           </ReduxProvider>
         </UIProvider>
       </body>

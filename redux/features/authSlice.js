@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    value: null
+    value: null,
+    loggedIn: false
 }
 const getLocalStorage = (name) => {
     if (typeof window !== 'undefined') {
@@ -18,25 +19,24 @@ export const auth = createSlice({
     initialState: typeof window !== 'undefined' ? getLocalStorage('authState') || initialState : initialState,
     reducers: {
         logOut: async () => {
-            // const response = await fetch(BACKEND_URL + '/auth/logout', {
-            //     method: 'POST',
-            //     credentials: 'include',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            // })
-            // const data = await response.json()
-            // if (data.success === true) {
-            //     setLocalstorage('authState', initialState)
-            //     window.location.href = '/login';
-            // }
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL_DOMAIN + '/auth/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+            const data = await response.json()
+            setLocalstorage('authState', initialState)
+            // window.location.href = '/login';
             return initialState;
         },
         logIn: (state, action) => {
-            if (action.payload.success === true) {
-                setLocalstorage('authState', { value: action.payload.data });
+            if (action.payload) {
+                setLocalstorage('authState', { value: action.payload, loggedIn: true });
                 return {
-                    value: action.payload.data
+                    value: { ...action.payload },
+                    loggedIn: true,
                 }
             }
             else {

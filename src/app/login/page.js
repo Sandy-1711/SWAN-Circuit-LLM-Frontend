@@ -1,33 +1,75 @@
+'use client'
 import { ArrowRightCircle } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { logIn } from "../../../redux/features/authSlice";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import Loader from "@/components/ui/loader";
 
 export default function LoginPage() {
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const dispatch = useDispatch();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    async function onSubmit(e) {
+        try {
 
-    // button 01c968
-    // bg 70dd9b
-    // bg left aaf1bf
-    //  card color ebfded
-    //  text box input color white
+            setLoading(true);
+            e.preventDefault();
+            const res = await fetch("http://localhost:8000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username ? username : undefined,
+                    email: email ? email : undefined,
+                    password
+                })
+            })
+            if (res.status === 400) {
+                const data = await res.json();
+                alert(data.detail);
+                return
+            }
+            const data = await res.json();
+            if (data.access_token) {
+                dispatch(logIn(data));
+                setEmail("");
+                setPassword("");
+                setUsername("");
+                router.push('/');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        finally {
+            setLoading(false);
+        }
 
+    }
     return <div className=" bg-gradient-to-r from-[var(--primary)] to-[var(--primary-foreground)] h-screen w-screen flex justify-center items-center ">
-        <form className="w-full rounded-[2.5rem] shadow max-w-[400px] bg-[var(--card)] px-12 py-20 space-y-6">
+        <form onSubmit={onSubmit} className="w-full rounded-[2.5rem] shadow max-w-[400px] bg-[var(--card)] px-12 py-20 space-y-6">
             <h2 className="text-4xl text-slate-600 text-center font-medium mb-8">Login</h2>
             <div className="flex flex-col gap-3">
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                     <label className="font-medium text-sm text-slate-600">Username</label>
-                    <input type="text" className="text-sm rounded-lg pl-4 border border-slate-300 py-2 bg-[var(--input-bg)]" />
-                </div>
-                <span className="text-sm text-slate-600 text-center">Or</span>
+                    <input onChange={(e) => { setUsername(e.target.value) }} type="text" className="text-sm rounded-lg pl-4 border border-slate-300 py-2 bg-[var(--input-bg)]" />
+                </div> */}
+                {/* <span className="text-sm text-slate-600 text-center">Or</span> */}
                 <div className="flex flex-col">
                     <label className="font-medium text-sm text-slate-600">Email Address</label>
-                    <input type="email" className="py-2 text-sm pl-4 border rounded-lg border-slate-300 bg-[var(--input-bg)]" />
+                    <input onChange={(e) => { setEmail(e.target.value) }} type="email" className="py-2 text-sm pl-4 border rounded-lg border-slate-300 bg-[var(--input-bg)]" />
                 </div>
                 <div className="flex flex-col">
                     <label className="font-medium text-sm text-slate-600">Password</label>
-                    <input type="password" className="text-sm py-2 pl-4 border rounded-lg border-slate-300 bg-[var(--input-bg)]" />
+                    <input onChange={(e) => { setPassword(e.target.value) }} type="password" className="text-sm py-2 pl-4 border rounded-lg border-slate-300 bg-[var(--input-bg)]" />
                 </div>
 
-                <button className="bg-[var(--button)] font-light mt-2 text-lg text-white rounded-full shadow-inner py-2">Login</button>
+                <button className="bg-[var(--button)] font-light mt-2 text-lg text-white rounded-full shadow-inner py-2">{loading ? <Loader /> : "Login"}</button>
                 <div className="flex justify-center">
                     <Link href={"/register"} className="text-sm flex gap-2 items-center">
                         <p className="text-slate-600">Not a member?</p>
