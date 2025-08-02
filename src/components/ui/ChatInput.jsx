@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { ArrowUp, LucideSettings2, Mic } from "lucide-react";
+import { ArrowUp, LucideSettings2, Mic, Square } from "lucide-react";
 import Wrapper from "./Wrapper";
 import { useEffect, useRef } from "react";
 import Loader from "./loader";
 
-export default function ChatInput({ onSubmit, modelType, setModelType }) {
+export default function ChatInput({ cancelRequest, onSubmit, modelType, setModelType }) {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const handleSubmit = async (e) => {
@@ -97,12 +97,14 @@ export default function ChatInput({ onSubmit, modelType, setModelType }) {
                     <Mic className="text-white h-6 w-6" />
                 </button>
                 <button
-                    type="submit"
+                    type={loading ? "button" : "submit"}  // Don't submit form if stopping
                     className="cursor-pointer bg-[var(--button)] rounded-full p-1.5 flex items-center justify-center"
+                    onClick={loading ? cancelRequest : undefined} // Handle stop when loading
+                    disabled={loading && !cancelRequest} // Optional: disable if can't cancel
                 >
-                    {loading ? <Loader />
-                        :
-                        <ArrowUp className="text-secondary h-6 w-6" />
+                    {loading
+                        ? <Square className="text-secondary h-6 w-6" /> // Show stop icon
+                        : <ArrowUp className="text-secondary h-6 w-6" />
                     }
                 </button>
             </form>

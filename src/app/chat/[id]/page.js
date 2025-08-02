@@ -31,6 +31,7 @@ export default function ChatPage({ }) {
         }
     }, [])
 
+    const abortControllerRef = useRef(null);
     async function fetchChat(id) {
         try {
             const { data } = await axios.get(`/user/chat?id=${id}`);
@@ -86,6 +87,11 @@ export default function ChatPage({ }) {
 
 
     async function handleSubmit(e) {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController
         try {
             // 1. Add user's message
             setMessages(prev => [...prev, {
@@ -100,7 +106,8 @@ export default function ChatPage({ }) {
                         'Authorization': `Bearer ${user.access_token}`,
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ prompt: e })
+                    body: JSON.stringify({ prompt: e }),
+                    signal: abortController.signal
                 });
                 if (!response.ok || !response.body) {
                     throw new Error("Failed to connect to stream");
@@ -179,7 +186,8 @@ export default function ChatPage({ }) {
                         'Authorization': `Bearer ${user.access_token}`,
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ prompt: e, chat_id: id })
+                    body: JSON.stringify({ prompt: e, chat_id: id }),
+                    signal: abortController.signal
                 });
                 if (!response.ok || !response.body) {
                     throw new Error("Failed to connect to stream");
@@ -202,8 +210,11 @@ export default function ChatPage({ }) {
                         if (!line.trim()) continue;
                         try {
                             const parsed = JSON.parse(line);
-                            console.log
-                                (parsed);
+                            console.log(parsed);
+                            if (parsed.status === "abort") {
+                                alert(parsed.detail);
+                                return
+                            }
                             if (parsed.stage === "code_progress") {
                                 code += parsed.token
 
@@ -235,13 +246,23 @@ export default function ChatPage({ }) {
 
             }
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            if (err.name === "AbortError") console.log("Aborted");
+            else {
+                console.log(err);
+            }
+
         } finally {
+            abortControllerRef.current = null;
             bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
     }
 
-
+    function cancelRequest() {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+    }
 
 
     if (id !== "new") {
@@ -275,7 +296,7 @@ export default function ChatPage({ }) {
                 </div>
             </div>
             <div className="absolute bottom-6 w-full">
-                <ChatInput onSubmit={handleSubmit} modelType={modelType} setModelType={setModelType} />
+                <ChatInput cancelRequest={cancelRequest} onSubmit={handleSubmit} modelType={modelType} setModelType={setModelType} />
             </div>
         </div>
     }
@@ -297,7 +318,7 @@ export default function ChatPage({ }) {
             </Wrapper>
         </div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  w-[90%] sm:w-[80%] md:w-[70%] lg:w-[40%]">
-            <ChatInput modelType={modelType} setModelType={setModelType} onSubmit={handleSubmit} />
+            <ChatInput cancelRequest={cancelRequest} modelType={modelType} setModelType={setModelType} onSubmit={handleSubmit} />
         </div>
         <div className="flex fixed bottom-0 w-full flex-col py-4">
             <div className="flex  justify-center gap-1.5 items-center">

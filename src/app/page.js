@@ -88,7 +88,7 @@ export default function Homepage() {
               <div className="select-none">
                 <h2 className="text-2xl text-[var(--text)] font-bold">{_.chat_name}</h2>
                 {/* <p className="text-sm font-light text-[var(--text-muted)]">{_.chat_description}</p> */}
-                <p className="text-xs font-medium text-left mt-1 text-[var(--text-muted)]">{new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'short' }).format(new Date())}</p>
+                <p className="text-xs font-medium text-left mt-1 text-[var(--text-muted)]">{new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(_.created_at))}</p>
               </div>
               <div className="flex justify-end w-full pt-3 items-end">
                 <button className="bg-[var(--button)] rounded-full w-7 h-7 flex  justify-center items-center">
