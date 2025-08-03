@@ -42,6 +42,9 @@ export default function LoginPage() {
                 setPassword("");
                 setUsername("");
                 router.push('/');
+                const redirectTo = localStorage.getItem('redirectTo') || '/';  // Default to home page if not found
+                router.push(redirectTo);
+                localStorage.removeItem('redirectTo');
             }
         } catch (err) {
             console.log(err);

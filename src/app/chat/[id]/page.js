@@ -135,7 +135,10 @@ export default function ChatPage({ }) {
                         try {
                             const parsed = JSON.parse(line);
                             console.log(parsed);
-
+                            if (parsed.status === "abort" || parsed.status === "error") {
+                                alert(parsed.reason);
+                                return
+                            }
                             if (parsed.stage === "code_progress") {
                                 code += parsed.token
 
@@ -211,8 +214,8 @@ export default function ChatPage({ }) {
                         try {
                             const parsed = JSON.parse(line);
                             console.log(parsed);
-                            if (parsed.status === "abort") {
-                                alert(parsed.detail);
+                            if (parsed.status === "abort" || parsed.status === "error") {
+                                alert(parsed.reason);
                                 return
                             }
                             if (parsed.stage === "code_progress") {

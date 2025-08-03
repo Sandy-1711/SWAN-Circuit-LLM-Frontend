@@ -12,7 +12,7 @@ export default function NewDiagramViewer({ data }) {
     const containerRef = useRef(null);
     const canvasRef = useRef(null);
     const { updatedData, setUpdatedData } = useD3Layout(data); // mutates `data.parts` to add top/left
-    
+
     const {
         pan,
         zoom,
@@ -23,7 +23,7 @@ export default function NewDiagramViewer({ data }) {
         handleComponentMouseDown // Add this line
     } = useCanvasInteraction({ updatedData, setUpdatedData, containerRef, canvasRef });
 
-    
+
     // Generate bezier path for connections
     const generateBezierPath = (start, end, isBreadboard = false) => {
         const dx = end.x - start.x;
@@ -238,6 +238,13 @@ export default function NewDiagramViewer({ data }) {
                             data-component-id={part.id}
                             onMouseDown={(e) => handleComponentMouseDown(e, part)} // Add this line
                         >
+                            {!isC && <div className="absolute top-2 left-4 flex gap-2">
+                                {pins?.map((pin, index) => (
+                                    <div className="text-[6px] font-extrabold" key={index}>
+                                        {pin?.name}
+                                    </div>
+                                ))}
+                            </div>}
                             <Component color={"black"} name={!isC ? part.type : undefined} {...part.attrs} />
                         </div>
                     );

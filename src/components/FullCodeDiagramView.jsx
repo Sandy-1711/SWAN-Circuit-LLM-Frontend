@@ -67,9 +67,9 @@ export default function FullCodeDiagramView() {
                 <ExternalLink />
             </button>
 
-            <div className="grid grid-cols-1 w-full h-full md:grid-cols-2 p-0 gap-0">
+            <div className="flex w-full h-full md:grid-cols-2 p-0 gap-0">
                 {/* Code Editor */}
-                <div className="relative bg-[#1e1e1e] overflow-hidden shadow-md">
+                <div className="relative w-1/3 bg-[#1e1e1e] overflow-hidden shadow-md">
                     <MonacoEditor
                         height="100%"
                         options={{ ...editorOptions, lineNumbers: "off" }}
@@ -81,7 +81,7 @@ export default function FullCodeDiagramView() {
                 </div>
 
                 {/* Diagram Viewer */}
-                <div className="relative border ">
+                <div className="flex-1 relative border ">
                     <NewDiagramViewer data={output} />
                 </div>
 

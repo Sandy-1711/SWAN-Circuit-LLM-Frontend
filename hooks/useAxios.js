@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { logIn, logOut } from '../redux/features/authSlice';
 import { store } from '../redux/store';
+import { useRouter } from 'next/navigation';
 let NEXT_PUBLIC_BACKEND_URL_DOMAIN = process.env.NEXT_PUBLIC_BACKEND_URL_DOMAIN
 
 const axiosInstance = axios.create({
@@ -11,6 +12,7 @@ const axiosInstance = axios.create({
 
 export const useAxios = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
 
     // Request Interceptor
     axiosInstance.interceptors.request.use(
@@ -50,7 +52,9 @@ export const useAxios = () => {
                     return axiosInstance(originalRequest);
                 } catch (refreshError) {
                     console.error('Refresh token failed:', refreshError);
+                    localStorage.setItem('redirectTo', window.location.pathname);
                     dispatch(logOut());
+                    router.push('/login');
                     // Optionally, handle failed refresh, e.g., redirect to login
                 }
             }
