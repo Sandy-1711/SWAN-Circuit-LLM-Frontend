@@ -14,7 +14,7 @@ export class DefaultElement extends LitElement {
     p {
       margin: 0 0 8px 0;
       font-family: Arial, sans-serif;
-      font-size: 14px;
+      font-size: 12px;
       text-align: center;
     }
    

@@ -9,6 +9,7 @@ import MessageBubble from "@/components/ui/MessageBubble";
 import ChatInput from "@/components/ui/ChatInput";
 import { Info } from "lucide-react";
 import { useAxios } from "../../../../hooks/useAxios";
+import { toast } from "sonner";
 
 export default function ChatPage({ }) {
     const { id } = useParams();
@@ -52,28 +53,11 @@ export default function ChatPage({ }) {
                     }
                 })
                 setMessages(updated_data);
-                // setMessages(
-                //     data.messages.map((m) => {
-
-                //         // Extract only {{parts:[],connections:[]}}
-                //         // const regex = /\{\{.*?parts.*?connections.*?\}\}/s;
-                //         // const match = m.output.match(regex);
-
-                //         // if (!match) return null;
-
-                //         // Convert {{ }} to valid JSON
-                //         // const jsonLike = match[0].replace(/^\{\{|\}\}$/g, '{');
-                //         // const validJson = jsonLike.replace(/(\w+):/g, '"$1":');
-
-                //         // return JSON.parse(validJson); // Only object, not whole message
-                //         return JSON.parse(m.output);
-                //     }).filter(Boolean) // Remove nulls
-                // );
+               
             }
 
         } catch (err) {
             console.log(err);
-            // alert("Something went wrong!!")
         }
     }
 
@@ -136,7 +120,8 @@ export default function ChatPage({ }) {
                             const parsed = JSON.parse(line);
                             console.log(parsed);
                             if (parsed.status === "abort" || parsed.status === "error") {
-                                alert(parsed.reason);
+                                // alert(parsed.reason);
+                                toast.error(parsed.reason);
                                 return
                             }
                             if (parsed.stage === "code_progress") {
@@ -215,7 +200,8 @@ export default function ChatPage({ }) {
                             const parsed = JSON.parse(line);
                             console.log(parsed);
                             if (parsed.status === "abort" || parsed.status === "error") {
-                                alert(parsed.reason);
+                                toast.error(parsed.reason);
+                                // alert(parsed.reason);
                                 return
                             }
                             if (parsed.stage === "code_progress") {

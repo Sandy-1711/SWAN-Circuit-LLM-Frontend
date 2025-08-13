@@ -16,7 +16,7 @@ export default function MessageBubble({ message, currentStatus, isLatest, tempMe
         fontSize: 14,
     }), []);
 
-    const { setCode, setOutput, setOpen } = useContext(FullCodeContext);
+    const { setCode, setOutput, setOpen, setPrompt, msgId, setMsgId } = useContext(FullCodeContext);
 
     if (message?.role === "user") {
         return (
@@ -70,6 +70,8 @@ export default function MessageBubble({ message, currentStatus, isLatest, tempMe
                                 onClick={() => {
                                     setCode(message?.code || "");
                                     setOutput(message?.output || {});
+                                    setPrompt(message?.prompt || "");
+                                    setMsgId(message?.id)
                                     setOpen(true);
                                 }}
                                 disabled={!hasCode && !hasOutput}

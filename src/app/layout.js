@@ -4,6 +4,7 @@ import ReduxProvider from "../../redux/Provider";
 import { UIProvider } from "../../contexts/useUIContext";
 import { FullCodeContextProvider } from "../../contexts/useFullCodeDiagramContext";
 import FullCodeDiagramView from "@/components/FullCodeDiagramView";
+import { Toaster } from "@/components/ui/sonner";
 const segoe = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
             <FullCodeContextProvider>
               {children}
               <FullCodeDiagramView />
+              <Toaster />
             </FullCodeContextProvider>
           </ReduxProvider>
         </UIProvider>
