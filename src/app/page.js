@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useAxios } from "../../hooks/useAxios";
 import { Skeleton } from "@/components/ui/skeleton";
 
-
+const NEXT_PUBLIC_BACKEND_URL_DOMAIN = process.env.NEXT_PUBLIC_BACKEND_URL_DOMAIN;
 export default function Homepage() {
   const user = useSelector((state) => state).auth.value;
   const loggedIn = useSelector((state) => state).auth.loggedIn;
@@ -21,7 +21,7 @@ export default function Homepage() {
   async function fetchChats() {
     try {
       setLoading(true);
-      const { data } = await axios.get("http://localhost:8000/user/all_chats")
+      const { data } = await axios.get(NEXT_PUBLIC_BACKEND_URL_DOMAIN + "/user/all_chats")
       if (Array.isArray(data)) {
         setChats(data);
       }

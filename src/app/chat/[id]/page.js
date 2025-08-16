@@ -84,7 +84,7 @@ export default function ChatPage({ }) {
             }]);
 
             if (id === "new") {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/user/new_chat?model=${modelType}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_DOMAIN || 'http://localhost:8000'}/user/new_chat?model=${modelType}`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${user.access_token}`,
@@ -168,7 +168,7 @@ export default function ChatPage({ }) {
                 }
 
             } else {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/user/chat_stream?model=${modelType}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_DOMAIN || 'http://localhost:8000'}/user/chat_stream?model=${modelType}`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${user.access_token}`,

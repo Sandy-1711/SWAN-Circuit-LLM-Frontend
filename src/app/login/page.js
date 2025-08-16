@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/ui/loader";
 
+const NEXT_PUBLIC_BACKEND_URL_DOMAIN = process.env.NEXT_PUBLIC_BACKEND_URL_DOMAIN;
 export default function LoginPage() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ export default function LoginPage() {
 
             setLoading(true);
             e.preventDefault();
-            const res = await fetch("http://localhost:8000/auth/login", {
+            const res = await fetch(NEXT_PUBLIC_BACKEND_URL_DOMAIN + "/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
